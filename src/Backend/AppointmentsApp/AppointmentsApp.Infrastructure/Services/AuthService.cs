@@ -1,20 +1,20 @@
+using AppointmentsApp.Application.Helpers;
+using AppointmentsApp.Application.Interfaces;
+using AppointmentsApp.Domain.DTOs.Auth;
+using AppointmentsApp.Domain.Entities;
+using AppointmentsApp.Domain.Enums;
+using AppointmentsApp.Domain.Responses;
+using AppointmentsApp.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+
 namespace AppointmentsApp.Infrastructure.Services
 {
-    using AppointmentsApp.Application.Helpers;
-    using AppointmentsApp.Application.Interfaces;
-    using AppointmentsApp.Domain.DTOs.Auth;
-    using AppointmentsApp.Domain.Entities;
-    using AppointmentsApp.Domain.Enums;
-    using AppointmentsApp.Domain.Responses;
-    using AppointmentsApp.Infrastructure.Data;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Configuration;
-    using System.IdentityModel.Tokens.Jwt;
-    using System.Security.Claims;
-    using System.Text;
-    using Microsoft.IdentityModel.Tokens;
-
     public class AuthService(DataContext context, ILogger<AuthService> logger, IConfiguration configuration) : IAuthService
     {
         private readonly DataContext _context = context;

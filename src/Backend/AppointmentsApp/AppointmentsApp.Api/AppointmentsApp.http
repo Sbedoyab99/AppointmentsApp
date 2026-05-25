@@ -1,6 +1,27 @@
 @AppointmentsApp_HostAddress = http://localhost:5000
 
-GET {{AppointmentsApp_HostAddress}}/weatherforecast/
-Accept: application/json
+### Public Auth Endpoints
+
+# POST /api/public/auth/login
+# Valida credenciales del usuario y retorna lista de tenants disponibles
+POST {{AppointmentsApp_HostAddress}}/api/public/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@appointmentsapp.com",
+  "password": "Password123!"
+}
+
+###
+
+# POST /api/public/auth/select-tenant
+# Selecciona un tenant y retorna JWT + RefreshToken
+POST {{AppointmentsApp_HostAddress}}/api/public/auth/select-tenant
+Content-Type: application/json
+
+{
+  "userId": "00000000-0000-0000-0000-000000000001",
+  "tenantId": "00000000-0000-0000-0000-000000000100"
+}
 
 ###

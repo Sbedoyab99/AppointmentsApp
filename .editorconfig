@@ -9,6 +9,9 @@ dotnet_separate_import_directive_groups = false
 # Quitar usings innecesarios
 dotnet_diagnostic.IDE0005.severity = warning
 
+# Deshabilitar CA1873 (static readonly field performance warning)
+dotnet_diagnostic.CA1873.severity = silent
+
 # Preferencias comunes
 dotnet_style_qualification_for_field = false:suggestion
 dotnet_style_qualification_for_property = false:suggestion

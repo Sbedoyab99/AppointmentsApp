@@ -11,6 +11,9 @@ using Serilog;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AppointmentsApp.Api
 {
@@ -48,6 +51,46 @@ namespace AppointmentsApp.Api
             // Add services to the container.
             builder.Services.AddScoped<IGenericService, GenericService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+
+            // Configure JWT Authentication
+            var jwtSettings = builder.Configuration.GetSection("Jwt");
+            var jwtSecret = jwtSettings["Secret"] ?? throw new InvalidOperationException("Jwt:Secret no configurado");
+            var jwtIssuer = jwtSettings["Issuer"];
+            var jwtAudience = jwtSettings["Audience"];
+
+            builder.Services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSecret)),
+                        ValidateIssuer = true,
+                        ValidIssuer = jwtIssuer,
+                        ValidateAudience = true,
+                        ValidAudience = jwtAudience,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            Log.Warning("Token validation failed: {Message}", context.Exception.Message);
+                            return Task.CompletedTask;
+                        },
+                        OnTokenValidated = context =>
+                        {
+                            Log.Information("Token validated for user: {Subject}", context.Principal?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value);
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
 
             builder.Services.AddCors(options =>
             {
@@ -194,6 +237,7 @@ namespace AppointmentsApp.Api
             app.UseHttpsRedirection();
             app.UseCors("DefaultCorsPolicy");
             app.UseMiddleware<ApiKeyValidatorMiddleware>();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
