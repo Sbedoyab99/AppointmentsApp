@@ -1,6 +1,6 @@
 @AppointmentsApp_HostAddress = http://localhost:5000
 @ApiKey = 00000000-0000-0000-0000-000000000000
-@AccessToken =
+@AccessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJlbWFpbCI6ImFkbWluQGJ1c2luZXNzMS5jb20iLCJyb2xlIjoiQWRtaW4iLCJ0ZW5hbnRJZCI6IjEwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDEwMCIsInRlbmFudE5hbWUiOiJMb3NBbWlnb3MiLCJuYmYiOjE3Nzk2NzU4MTAsImV4cCI6MTc3OTY3OTQxMCwiaWF0IjoxNzc5Njc1ODEwLCJpc3MiOiJBcHBvaW50bWVudHNBcHAiLCJhdWQiOiJBcHBvaW50bWVudHNBcHBVc2VycyJ9.gra24-k19ncTMzOuaFu98kOE9k52ZDyez0rcjBqsu40
 
 # Seed IDs para datos de prueba
 @AdminUserId1 = 10000000-0000-0000-0000-000000000001
@@ -56,8 +56,8 @@ Content-Type: application/json
 x-api-key: {{ApiKey}}
 
 {
-  "userId": "{{AdminUserId1}}",
-  "tenantId": "{{BusinessProfileId2}}"
+  "userId": "{{AdminUserId2}}",
+  "tenantId": "{{BusinessProfileId1}}"
 }
 
 ###

@@ -1,5 +1,4 @@
 using AppointmentsApp.Domain.Entities;
-using AppointmentsApp.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
