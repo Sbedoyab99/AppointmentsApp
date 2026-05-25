@@ -47,6 +47,7 @@ namespace AppointmentsApp.Api
 
             // Add services to the container.
             builder.Services.AddScoped<IGenericService, GenericService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             builder.Services.AddCors(options =>
             {
@@ -138,7 +139,7 @@ namespace AppointmentsApp.Api
             {
                 errorApp.Run(async context =>
                 {
-                    var exceptionFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+                    IExceptionHandlerPathFeature? exceptionFeature = context.Features.Get<IExceptionHandlerPathFeature>();
                     Log.Error(exceptionFeature?.Error, "Unhandled exception for {Path}", exceptionFeature?.Path ?? context.Request.Path.Value);
 
                     await WriteApiResponseAsync(context, StatusCodes.Status500InternalServerError, "Ocurrió un error inesperado.");

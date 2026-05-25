@@ -1,4 +1,5 @@
 ﻿using AppointmentsApp.Domain.Responses;
+using Microsoft.Extensions.Primitives;
 using System.Text.Json;
 
 namespace AppointmentsApp.Api.Middlewares
@@ -21,7 +22,7 @@ namespace AppointmentsApp.Api.Middlewares
 
             context.Response.ContentType = "application/json";
 
-            if (!context.Request.Headers.TryGetValue("x-api-key", out var extractedApiKey))
+            if (!context.Request.Headers.TryGetValue("x-api-key", out StringValues extractedApiKey))
             {
                 var response = new ApiResponse
                 {

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Reflection;
 
 namespace AppointmentsApp.Application.Helpers
 {
@@ -9,7 +10,7 @@ namespace AppointmentsApp.Application.Helpers
     {
         public static string GetEnumDescription<T>(this T value) where T : Enum
         {
-            var field = value.GetType().GetField(value.ToString())!;
+            FieldInfo field = value.GetType().GetField(value.ToString())!;
             var attributes = (DescriptionAttribute[])field.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
             if (attributes.Length > 0)
