@@ -19,7 +19,7 @@ namespace AppointmentsApp.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
@@ -92,6 +92,14 @@ namespace AppointmentsApp.Api
                     };
                 });
 
+            // Configure Authorization
+            builder.Services.AddAuthorizationBuilder()
+                .AddPolicy("AdminOnly", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireRole("Admin");
+                });
+
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("DefaultCorsPolicy", policyBuilder =>
@@ -155,6 +163,16 @@ namespace AppointmentsApp.Api
             });
 
             WebApplication app = builder.Build();
+
+            // Apply migrations and seed data in development
+            if (app.Environment.IsDevelopment())
+            {
+                using IServiceScope scope = app.Services.CreateScope();
+                DataContext context = scope.ServiceProvider.GetRequiredService<DataContext>();
+                ILoggerFactory loggerFactory = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
+                await context.Database.MigrateAsync();
+                await AuthDataSeeder.SeedAsync(context, loggerFactory);
+            }
 
             app.UseSerilogRequestLogging();
             Log.Information("Backend Template API started in {Environment}", app.Environment.EnvironmentName);

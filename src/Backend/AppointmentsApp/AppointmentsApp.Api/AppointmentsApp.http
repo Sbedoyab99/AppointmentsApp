@@ -1,27 +1,83 @@
 @AppointmentsApp_HostAddress = http://localhost:5000
+@ApiKey = 00000000-0000-0000-0000-000000000000
+@AccessToken =
+
+# Seed IDs para datos de prueba
+@AdminUserId1 = 10000000-0000-0000-0000-000000000001
+@AdminUserId2 = 10000000-0000-0000-0000-000000000002
+@BusinessProfileId1 = 10000000-0000-0000-0000-000000000100
+@BusinessProfileId2 = 10000000-0000-0000-0000-000000000101
 
 ### Public Auth Endpoints
 
-# POST /api/public/auth/login
-# Valida credenciales del usuario y retorna lista de tenants disponibles
+# POST /api/public/auth/login - Test con Admin1
+# Email: admin@business1.com, Password: Admin123456
+# Debe retornar lista con 2 tenants (LosAmigos y DrGarcia)
 POST {{AppointmentsApp_HostAddress}}/api/public/auth/login
 Content-Type: application/json
+x-api-key: {{ApiKey}}
 
 {
-  "email": "admin@appointmentsapp.com",
-  "password": "Password123!"
+  "email": "admin@business1.com",
+  "password": "Admin123456"
 }
 
 ###
 
-# POST /api/public/auth/select-tenant
-# Selecciona un tenant y retorna JWT + RefreshToken
-POST {{AppointmentsApp_HostAddress}}/api/public/auth/select-tenant
+# POST /api/public/auth/login - Test con Admin2
+# Email: admin@business2.com, Password: Admin123456
+# Debe retornar lista con 1 tenant (DrGarcia)
+POST {{AppointmentsApp_HostAddress}}/api/public/auth/login
 Content-Type: application/json
+x-api-key: {{ApiKey}}
 
 {
-  "userId": "00000000-0000-0000-0000-000000000001",
-  "tenantId": "00000000-0000-0000-0000-000000000100"
+  "email": "admin@business2.com",
+  "password": "Admin123456"
 }
+
+###
+
+# POST /api/public/auth/select-tenant - Admin1 selecciona LosAmigos
+POST {{AppointmentsApp_HostAddress}}/api/public/auth/select-tenant
+Content-Type: application/json
+x-api-key: {{ApiKey}}
+
+{
+  "userId": "{{AdminUserId1}}",
+  "tenantId": "{{BusinessProfileId1}}"
+}
+
+###
+
+# POST /api/public/auth/select-tenant - Admin1 selecciona DrGarcia
+POST {{AppointmentsApp_HostAddress}}/api/public/auth/select-tenant
+Content-Type: application/json
+x-api-key: {{ApiKey}}
+
+{
+  "userId": "{{AdminUserId1}}",
+  "tenantId": "{{BusinessProfileId2}}"
+}
+
+###
+
+### Admin Endpoints (Require [Authorize(Policy = "AdminOnly")])
+
+# GET /api/admin/health
+# Verifica que solo usuarios con rol Admin pueden acceder
+# Debe fallar sin JWT (401 Unauthorized)
+GET {{AppointmentsApp_HostAddress}}/api/admin/health
+Accept: application/json
+x-api-key: {{ApiKey}}
+
+###
+
+# GET /api/admin/health with valid JWT
+# Debe retornar 200 OK si el token tiene rol Admin
+GET {{AppointmentsApp_HostAddress}}/api/admin/health
+Authorization: Bearer {{AccessToken}}
+Accept: application/json
+x-api-key: {{ApiKey}}
 
 ###
