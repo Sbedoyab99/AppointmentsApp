@@ -73,6 +73,7 @@ namespace AppointmentsApp.Infrastructure.Services
 
                 var response = new LoginResponseDto
                 {
+                    UserId = user.Id,
                     RequiresTenantSelection = tenants.Count > 1,
                     Tenants = tenants,
                     Message = "Credenciales validadas. Selecciona un negocio."
