@@ -1,5 +1,6 @@
 using AppointmentsApp.Domain.Responses;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AppointmentsApp.Api.Controllers
 {
@@ -22,6 +23,30 @@ namespace AppointmentsApp.Api.Controllers
                 StatusCode = response.StatusCode,
                 Message = response.Message
             });
+        }
+
+        /// <summary>
+        /// Intenta extraer el TenantId (BusinessProfileId) desde los claims del JWT.
+        /// </summary>
+        /// <param name="tenantId">El TenantId extraído, Guid.Empty si falla.</param>
+        /// <returns>True si se extrajo correctamente, False en caso contrario.</returns>
+        protected bool TryGetTenantIdFromClaims(out Guid tenantId)
+        {
+            tenantId = Guid.Empty;
+            Claim? tenantIdClaim = User.FindFirst("tenantId");
+
+            if (tenantIdClaim is null)
+            {
+                return false;
+            }
+
+            if (Guid.TryParse(tenantIdClaim.Value, out Guid parsedTenantId))
+            {
+                tenantId = parsedTenantId;
+                return true;
+            }
+
+            return false;
         }
     }
 }

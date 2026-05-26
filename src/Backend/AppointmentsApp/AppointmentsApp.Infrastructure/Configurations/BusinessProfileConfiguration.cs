@@ -28,6 +28,15 @@ namespace AppointmentsApp.Infrastructure.Configurations
                 .HasMaxLength(100)
                 .IsRequired();
 
+            builder.Property(profile => profile.Description)
+                .HasMaxLength(1000);
+
+            builder.Property(profile => profile.Phone)
+                .HasMaxLength(30);
+
+            builder.Property(profile => profile.Address)
+                .HasMaxLength(300);
+
             builder.Property(profile => profile.ContactEmail)
                 .HasMaxLength(320)
                 .IsRequired();

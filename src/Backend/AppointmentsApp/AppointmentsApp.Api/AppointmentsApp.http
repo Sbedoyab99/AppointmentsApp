@@ -81,3 +81,195 @@ Accept: application/json
 x-api-key: {{ApiKey}}
 
 ###
+
+### Business Profile Endpoints (Require [Authorize(Policy = "AdminOnly")])
+
+# GET /api/admin/business-profile - sin JWT
+# Debe retornar 401 Unauthorized
+GET {{AppointmentsApp_HostAddress}}/api/admin/business-profile
+Accept: application/json
+x-api-key: {{ApiKey}}
+
+###
+
+# GET /api/admin/business-profile - con JWT válido
+# Debe retornar 200 OK con datos del negocio
+GET {{AppointmentsApp_HostAddress}}/api/admin/business-profile
+Authorization: Bearer {{AccessToken}}
+Accept: application/json
+x-api-key: {{ApiKey}}
+
+###
+
+# PUT /api/admin/business-profile - actualizar con datos válidos
+PUT {{AppointmentsApp_HostAddress}}/api/admin/business-profile
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+Accept: application/json
+x-api-key: {{ApiKey}}
+
+{
+  "name": "LosAmigos Barbería",
+  "tradeName": "Los Amigos",
+  "description": "Barbería con los mejores servicios de corte y afeitado",
+  "phone": "+57 300 123 4567",
+  "address": "Carrera 10 #5-30, Bogotá",
+  "email": "contacto@losamigos.com",
+  "timeZone": "America/Bogota"
+}
+
+###
+
+# PUT /api/admin/business-profile - sin JWT
+# Debe retornar 401 Unauthorized
+PUT {{AppointmentsApp_HostAddress}}/api/admin/business-profile
+Content-Type: application/json
+Accept: application/json
+x-api-key: {{ApiKey}}
+
+{
+  "name": "Test",
+  "tradeName": "Test",
+  "timeZone": "America/Bogota",
+  "email": "test@test.com"
+}
+
+###
+
+# PUT /api/admin/business-profile - con Name vacío
+# Debe retornar 400 Bad Request
+PUT {{AppointmentsApp_HostAddress}}/api/admin/business-profile
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+Accept: application/json
+x-api-key: {{ApiKey}}
+
+{
+  "name": "",
+  "tradeName": "Test",
+  "timeZone": "America/Bogota",
+  "contactEmail": "test@test.com"
+}
+
+###
+
+# PUT /api/admin/business-profile - con Name muy corto (< 2 caracteres)
+# Debe retornar 400 Bad Request
+PUT {{AppointmentsApp_HostAddress}}/api/admin/business-profile
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+Accept: application/json
+x-api-key: {{ApiKey}}
+
+{
+  "name": "A",
+  "tradeName": "Test",
+  "timeZone": "America/Bogota",
+  "contactEmail": "test@test.com"
+}
+
+###
+
+# PUT /api/admin/business-profile - con Name muy largo (> 200 caracteres)
+# Debe retornar 400 Bad Request
+PUT {{AppointmentsApp_HostAddress}}/api/admin/business-profile
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+Accept: application/json
+x-api-key: {{ApiKey}}
+
+{
+  "name": "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum",
+  "tradeName": "Test",
+  "timeZone": "America/Bogota",
+  "contactEmail": "test@test.com"
+}
+
+###
+
+# PUT /api/admin/business-profile - con ContactEmail inválido
+# Debe retornar 400 Bad Request
+PUT {{AppointmentsApp_HostAddress}}/api/admin/business-profile
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+Accept: application/json
+x-api-key: {{ApiKey}}
+
+{
+  "name": "Barbería Test",
+  "tradeName": "Test",
+  "timeZone": "America/Bogota",
+  "contactEmail": "invalid-email-format"
+}
+
+###
+
+# PUT /api/admin/business-profile - con TimeZone inválido
+# Debe retornar 400 Bad Request
+PUT {{AppointmentsApp_HostAddress}}/api/admin/business-profile
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+Accept: application/json
+x-api-key: {{ApiKey}}
+
+{
+  "name": "Barbería Test",
+  "tradeName": "Test",
+  "timeZone": "Invalid/TimeZone",
+  "contactEmail": "test@test.com"
+}
+
+###
+
+# PUT /api/admin/business-profile - con Description > 1000 caracteres
+# Debe retornar 400 Bad Request
+PUT {{AppointmentsApp_HostAddress}}/api/admin/business-profile
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+Accept: application/json
+x-api-key: {{ApiKey}}
+
+{
+  "name": "Barbería Test",
+  "tradeName": "Test",
+  "description": "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt neque porro quisquam est qui dolorem ipsum quia dolor sit amet consectetur adipisci velit sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem",
+  "timeZone": "America/Bogota",
+  "contactEmail": "test@test.com"
+}
+
+###
+
+### Public Business Profile Endpoints (No Require Authentication)
+
+# GET /api/public/business-profile - sin businessProfileId
+# Debe retornar 400 Bad Request
+GET {{AppointmentsApp_HostAddress}}/api/public/business-profile
+Accept: application/json
+x-api-key: {{ApiKey}}
+
+###
+
+# GET /api/public/business-profile?businessProfileId=... - sin autenticación
+# Debe retornar 200 OK con datos del negocio
+GET {{AppointmentsApp_HostAddress}}/api/public/business-profile?businessProfileId={{BusinessProfileId1}}
+Accept: application/json
+x-api-key: {{ApiKey}}
+
+###
+
+# GET /api/public/business-profile?businessProfileId=... - Perfil 2 (Consultorio Dr. García)
+# Debe retornar 200 OK con datos del segundo negocio
+GET {{AppointmentsApp_HostAddress}}/api/public/business-profile?businessProfileId={{BusinessProfileId2}}
+Accept: application/json
+x-api-key: {{ApiKey}}
+
+###
+
+# GET /api/public/business-profile?businessProfileId=... - con businessProfileId inválido
+# Debe retornar 404 Not Found
+GET {{AppointmentsApp_HostAddress}}/api/public/business-profile?businessProfileId=00000000-0000-0000-0000-000000000000
+Accept: application/json
+x-api-key: {{ApiKey}}
+
+###
+
